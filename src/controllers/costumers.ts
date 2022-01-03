@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import knex from "../database";
 import { CostumerDatabase } from "../shared/costumer";
-import validateUserData, { emailValidator, validateEmail } from "../helpers/costumerValidator";
+import validateUserData, { validateEmail } from "../helpers/costumerValidator";
 
 
 export async function createUser(req: Request, res: Response) {
@@ -23,7 +23,7 @@ export async function createUser(req: Request, res: Response) {
 
         return res.status(201).json({message: "User created successfully"})
     } catch (err: any) {
-        res
+        return res
         .status(500)
         .json({error: err.message});
     }
@@ -57,7 +57,7 @@ export async function updateUser(req: Request, res: Response) {
 
         return res.status(201).json({message: "User updated successfully"})
     } catch (err: any) {
-        res
+        return res
         .status(500)
         .json({error: err.message});
     }
@@ -72,7 +72,7 @@ export async function deleteUser(req: Request, res: Response) {
         .first();
 
         if (!checkUser) {
-            return res.status(404).json({ error: "User does not exist" })
+            return res.status(403).json({ error: "User does not exist" })
         }
 
         await knex("costumers")
@@ -81,7 +81,7 @@ export async function deleteUser(req: Request, res: Response) {
 
         return res.status(200).json({message: "User deleted successfully"})
     } catch (err: any) {
-        res
+        return res
         .status(500)
         .json({error: err.message});
     }
@@ -103,7 +103,7 @@ export async function getUser(req: Request, res: Response) {
 
         return res.status(200).json(userFound);
     } catch (err: any) {
-        res
+        return res
         .status(500)
         .json({error: err.message});
     }
@@ -115,7 +115,7 @@ export async function getAllUsers(_req: Request, res: Response) {
 
         return res.status(200).json(usersFound);
     } catch (err: any) {
-        res
+        return res
         .status(500)
         .json({error: err.message});
     }

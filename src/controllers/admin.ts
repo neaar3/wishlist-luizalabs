@@ -4,17 +4,21 @@ import { passwordAdmin, secret, usernameAdmin } from "../access";
 import Admin from "../shared/admin";
 
 export async function loginAdmin(req: Request, res: Response) {
-    const { username, password }: Admin = req.body;
+    const login: Admin = req.body;
+
+    if(!login.username || !login.password) {
+        return res.status(400).json({ message: "Login must contain username and password" })
+    }
 
     try{
-        const correctUsername = usernameAdmin === username;
-        const correctPassword = passwordAdmin === password;
+        const correctUsername = usernameAdmin === login.username;
+        const correctPassword = passwordAdmin === login.password;
 
         if (!correctPassword || !correctUsername) {
-            res.status(401).json({ message: "Invalid Username or Password. Try again." })
+            return res.status(401).json({ message: "Invalid Username or Password. Try again." })
         }
 
-        const token = jwt.sign({ username }, secret, { expiresIn: "2h" });
+        const token = jwt.sign({ username: login.username }, secret, { expiresIn: "2h" });
 
         return res.status(200).json({ token })
     } catch (err: any) {
