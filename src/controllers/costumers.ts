@@ -10,7 +10,7 @@ export async function createUser(req: Request, res: Response) {
     try {
         await validateUserData({ name, email });
 
-        const checkEmail = await knex<CostumerDatabase>("costumer")
+        const checkEmail = await knex<CostumerDatabase>("costumers")
         .first("*")
         .where("email", email);
 
@@ -18,7 +18,7 @@ export async function createUser(req: Request, res: Response) {
             return res.status(403).json({ error: "Email already in use." })
         }
 
-        await knex("costumer")
+        await knex("costumers")
         .insert({ name, email });
 
         return res.status(201).json({message: "User created successfully"})
@@ -34,7 +34,7 @@ export async function updateUser(req: Request, res: Response) {
     const update = req.body;
 
     try {
-        const user = await knex.first().from<CostumerDatabase>("costumer").where("id", userId);
+        const user = await knex<CostumerDatabase>("costumers").where("id", userId).first();
 
         if(!user) {
             return res.status(403).json({ error: "User does not exist." })
@@ -43,16 +43,16 @@ export async function updateUser(req: Request, res: Response) {
         if(update.email) {
             validateEmail(update.email)
 
-            const checkEmail = await knex<CostumerDatabase>("costumer")
-            .first("*")
-            .where("email", update.email);
+            const checkEmail = await knex<CostumerDatabase>("costumers")
+            .where("email", update.email)
+            .first();
 
             if (checkEmail) {
                 return res.status(403).json({ error: "Email already in use." })
             }
         }
 
-        await knex("costumer")
+        await knex("costumers")
         .where("id", userId)
         .update({
             email: update.email ?? user.email,
@@ -71,15 +71,15 @@ export async function deleteUser(req: Request, res: Response) {
     const { userId } = req.params;
 
     try {
-        const checkUser = await knex<CostumerDatabase>("costumer")
-        .first("*")
-        .where("id", userId);
+        const checkUser = await knex<CostumerDatabase>("costumers")
+        .where("id", userId)
+        .first();
 
         if (!checkUser) {
             return res.status(404).json({ error: "User does not exist" })
         }
 
-        await knex("costumer")
+        await knex("costumers")
         .where("id", userId)
         .del();
 
@@ -95,9 +95,9 @@ export async function getUser(req: Request, res: Response) {
     const { userId } = req.params;
 
     try {
-        const userFound = await knex<CostumerDatabase>("costumer")
-        .first("*")
-        .where("id", userId);
+        const userFound = await knex<CostumerDatabase>("costumers")
+        .where("id", userId)
+        .first();
 
         if(!userFound) {
             res
@@ -115,7 +115,7 @@ export async function getUser(req: Request, res: Response) {
 
 export async function getAllUsers(_req: Request, res: Response) {
     try {
-        const usersFound = await knex.select().from<CostumerDatabase>("costumer")
+        const usersFound = await knex.select().from<CostumerDatabase>("costumers")
 
         return res.status(200).json(usersFound);
     } catch (err: any) {

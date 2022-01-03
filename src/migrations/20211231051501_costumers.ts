@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
         table.text("id").notNullable().primary()
         table.text("title").notNullable()
         table.text("review_score")
-        table.text("costumer_id").unsigned()
+        table.integer("costumer_id").unsigned()
             .references('costumers.id')
             .onUpdate('CASCADE')
             .onDelete('CASCADE')
