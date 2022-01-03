@@ -86,23 +86,23 @@ A aplicação possue diversos endpoints e aceita requisições do tipo GET, POST
 
   Para todas as requisições abaixo, deve ser passado o token para autenticação. O token vem como resposta do /login.
 
-  - ``POST /costumer``
+  - ``POST /customer``
   Cria um cliente no banco de dados. É necessario passar name e email no body.
-  - ``PUT /costumer/:id``
+  - ``PUT /customer/:id``
   Atualiza um cliente no banco de dados. É necessario passar name ou email no body para atualizar e id do usuario a ser editado como parametro na url.
-  - ``DELETE /costumer/:id``
+  - ``DELETE /customer/:id``
   Remove um cliente no banco de dados. É necessario passar id do usuario a ser removido como parametro na url.
-  - ``GET /costumer/:id``
+  - ``GET /customer/:id``
   Detalha um cliente especifico cadastrado. É necessario passar id do usuario a ser detalhado como parametro na url
-  - ``GET /costumer``
+  - ``GET /customer``
   Detalha todos os clientes cadastrados.
 
   - ``GET /product``
-  Lista todos os produtos de um determinado cliente. É necessario passar o id do cliente como costumerId no body.
+  Lista todos os produtos de um determinado cliente. É necessario passar o id do cliente como customerId no body.
   - ``POST /product/:id``
-  Cadastra um produto para um cliente no banco de dados. É necessario passar o id do produto a ser cadastrado como parametro na url e id do cliente como costumerId no body.
+  Cadastra um produto para um cliente no banco de dados. É necessario passar o id do produto a ser cadastrado como parametro na url e id do cliente como customerId no body.
   - ``DELETE /product/:id``
-  Remove um produto de um cliente no banco de dados. É necessario passar o id do produto a ser removido como parametro na url e id do cliente como costumerId no body.
+  Remove um produto de um cliente no banco de dados. É necessario passar o id do produto a ser removido como parametro na url e id do cliente como customerId no body.
 
 
 ---

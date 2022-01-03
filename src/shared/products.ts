@@ -5,5 +5,5 @@ export interface ProductsDatabase {
     id: string;
     title: string;
     review_score: string;
-    costumer_id: string;
+    customer_id: string;
 }

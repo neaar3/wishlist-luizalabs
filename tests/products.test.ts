@@ -21,7 +21,7 @@ describe("products", () => {
     describe("addProductsToFavorites", () => {
         test("should successfully add a new product on favorites", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -33,7 +33,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
 
             const res = await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
 
@@ -41,7 +41,7 @@ describe("products", () => {
             expect(res.body.message).toBe("Product added successfully");
         });
 
-        test("should send error if costumerId isn't send", async () => {
+        test("should send error if customerId isn't send", async () => {
             const params = {
                 id: '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
             }
@@ -49,12 +49,12 @@ describe("products", () => {
             const res = await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send();
 
             expect(res.status).toBe(400);
-            expect(res.body.message).toBe("costumerId is required");
+            expect(res.body.message).toBe("customerId is required");
         });
 
-        test("should send error if costumerId doesn't find any user", async () => {
+        test("should send error if customerId doesn't find any user", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -69,7 +69,7 @@ describe("products", () => {
 
         test("should send error if product id doesn't find any product", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -81,7 +81,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
 
             const res = await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
 
@@ -91,7 +91,7 @@ describe("products", () => {
 
         test("should send error if product is already in favorites list", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -103,7 +103,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
             await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
 
             const res = await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
@@ -118,7 +118,7 @@ describe("products", () => {
 
         test("should remove a product in favorites", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -130,7 +130,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
             await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
 
             const res = await req.delete("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
@@ -139,7 +139,7 @@ describe("products", () => {
             expect(res.body.message).toBe("Product deleted");
         });
 
-        test("should send error if costumerId isn't send", async () => {
+        test("should send error if customerId isn't send", async () => {
             const params = {
                 id: '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
             }
@@ -147,12 +147,12 @@ describe("products", () => {
             const res = await req.delete("/product").set('Authorization', 'Bearer ' + token).query(params).send();
 
             expect(res.status).toBe(400);
-            expect(res.body.message).toBe("costumerId is required");
+            expect(res.body.message).toBe("customerId is required");
         });
 
-        test("should send error if costumerId doesn't find any user", async () => {
+        test("should send error if customerId doesn't find any user", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -167,7 +167,7 @@ describe("products", () => {
 
         test("should send error if product is not found in favorites", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -179,7 +179,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
 
             const res = await req.delete("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
 
@@ -192,7 +192,7 @@ describe("products", () => {
 
         test("should return message if no product is found in favorites", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const params = {
@@ -204,7 +204,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
             await req.post("/product").set('Authorization', 'Bearer ' + token).query(params).send(body);
 
             const res = await req.get("/product").set('Authorization', 'Bearer ' + token).send(body);
@@ -213,16 +213,16 @@ describe("products", () => {
             expect(res.body.message).toBeTruthy();
         });
 
-        test("should send error if costumerId isn't send", async () => {
+        test("should send error if customerId isn't send", async () => {
             const res = await req.get("/product").set('Authorization', 'Bearer ' + token).send();
 
             expect(res.status).toBe(400);
-            expect(res.body.message).toBe("costumerId is required");
+            expect(res.body.message).toBe("customerId is required");
         });
 
         test("should return message if no product is found in favorites", async () => {
             const body = {
-                costumerId: 1
+                customerId: 1
             };
 
             const body2 = {
@@ -230,7 +230,7 @@ describe("products", () => {
                 email: faker.internet.email(),
             };
 
-            await req.post("/costumer").set('Authorization', 'Bearer ' + token).send(body2);
+            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
 
             const res = await req.get("/product").set('Authorization', 'Bearer ' + token).send(body);
 

@@ -2,20 +2,20 @@ import { Request, Response } from "express";
 import axios from "axios";
 import knex from "../database";
 import { ProductsDatabase } from "../shared/products";
-import { CostumerDatabase } from "../shared/costumer";
+import { customerDatabase } from "../shared/customer";
 import { nonNullValues } from "../helpers/utils";
 
 export async function addProductsToFavorites(req: Request, res: Response) {
     const { id } = req.params;
-    const { costumerId } = req.body;
+    const { customerId } = req.body;
 
     try {
-        if (!costumerId) {
-            return res.status(400).json({ message: "costumerId is required" })
+        if (!customerId) {
+            return res.status(400).json({ message: "customerId is required" })
         }
 
-        const userFound = await knex<CostumerDatabase>("costumers")
-        .where("id", costumerId)
+        const userFound = await knex<customerDatabase>("customers")
+        .where("id", customerId)
         .first();
 
         if (!userFound) {
@@ -32,14 +32,14 @@ export async function addProductsToFavorites(req: Request, res: Response) {
             return res.status(400).json({ message: "Product does not exist" });
         }
 
-        const productAlreadyAdded = await knex<Partial<ProductsDatabase>>("products").where("costumer_id", costumerId).first();
+        const productAlreadyAdded = await knex<Partial<ProductsDatabase>>("products").where("customer_id", customerId).first();
 
         if (productAlreadyAdded) {
             return res.status(403).json({ message: "Can't duplicate product in favorite's list" });
         }
 
         await knex("products")
-        .insert({ ...products, costumer_id: costumerId });
+        .insert({ ...products, customer_id: customerId });
 
         return res.status(201).json({ message: "Product added successfully" });
     } catch (err) {
@@ -49,15 +49,15 @@ export async function addProductsToFavorites(req: Request, res: Response) {
 
 export async function removeProductsFromFavorites(req: Request, res: Response) {
     const { id } = req.params;
-    const { costumerId } = req.body;
+    const { customerId } = req.body;
 
     try {
-        if (!costumerId) {
-            return res.status(400).json({ message: "costumerId is required" })
+        if (!customerId) {
+            return res.status(400).json({ message: "customerId is required" })
         }
 
-        const userFound = await knex<CostumerDatabase>("costumers")
-        .where("id", costumerId)
+        const userFound = await knex<customerDatabase>("customers")
+        .where("id", customerId)
         .first();
 
         if (!userFound) {
@@ -66,14 +66,14 @@ export async function removeProductsFromFavorites(req: Request, res: Response) {
             .json({message: "User does not exist"});
         }
 
-        const productAlreadyAdded = await knex.first().from<Partial<ProductsDatabase>>("products").where({ costumer_id: costumerId, id });
+        const productAlreadyAdded = await knex.first().from<Partial<ProductsDatabase>>("products").where({ customer_id: customerId, id });
 
         if (!productAlreadyAdded) {
             return res.status(400).json({ message: "Product isn't in favorite list." });
         }
 
         await knex("products")
-        .where({id, costumer_id: costumerId})
+        .where({id, customer_id: customerId})
         .del();
 
         return res.status(200).json({ message: "Product deleted" });
@@ -83,14 +83,14 @@ export async function removeProductsFromFavorites(req: Request, res: Response) {
 }
 
 export async function listProductsFromFavorites(req: Request, res: Response) {
-    const { costumerId } = req.body;
+    const { customerId } = req.body;
 
     try {
-        if (!costumerId) {
-            return res.status(400).json({ message: "costumerId is required" })
+        if (!customerId) {
+            return res.status(400).json({ message: "customerId is required" })
         }
 
-        const products = await knex.select("*").from<Partial<ProductsDatabase>>("products").where("costumer_id", costumerId);
+        const products = await knex.select("*").from<Partial<ProductsDatabase>>("products").where("customer_id", customerId);
 
         if (products.length === 0){
             return res.status(200).json({ message: "No products added to favorite list" });

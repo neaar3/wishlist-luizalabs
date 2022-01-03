@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { loginAdmin } from './controllers/admin';
-import { createUser, deleteUser, getAllUsers, getUser, updateUser } from './controllers/costumers';
+import { createUser, deleteUser, getAllUsers, getUser, updateUser } from './controllers/customers';
 import { addProductsToFavorites, listProductsFromFavorites, removeProductsFromFavorites } from './controllers/products';
 import { authenticated } from './middlewares/auth';
 
@@ -10,11 +10,11 @@ routes.post('/login', loginAdmin)
 
 routes.use(authenticated)
 
-routes.post("/costumer", createUser);
-routes.put("/costumer/:id", updateUser);
-routes.delete("/costumer/:id", deleteUser);
-routes.get("/costumer/:id", getUser);
-routes.get("/costumer", getAllUsers);
+routes.post("/customer", createUser);
+routes.put("/customer/:id", updateUser);
+routes.delete("/customer/:id", deleteUser);
+routes.get("/customer/:id", getUser);
+routes.get("/customer", getAllUsers);
 
 routes.post("/product/:id", addProductsToFavorites);
 routes.delete("/product/:id", removeProductsFromFavorites);
