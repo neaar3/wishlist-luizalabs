@@ -8,13 +8,12 @@ import { passwordAdmin, usernameAdmin } from "../src/access";
 const req = supertest(app);
 let token: string | null = null;
 
-beforeEach((done) => {
+beforeEach(() => {
     req.post('/login')
-    .send({ username: usernameAdmin, password: passwordAdmin })
-    .end(function(_err, res) {
-    token = res.body.token;
-    done();
-    });
+        .send({ username: usernameAdmin, password: passwordAdmin })
+        .end(function(_err, res) {
+            token = res.body.token;
+        });
 });
 describe("Costumers", () => {
 
