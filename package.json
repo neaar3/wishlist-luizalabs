@@ -1,0 +1,47 @@
+{
+  "name": "wishlist-luizalabs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
+    "test": "node --async-stack-traces node_modules/jest/bin/jest.js --forceExit --detectOpenHandles -w4",
+    "start": "tsc && node dist/src/index.js",
+    "migrate:make": "knex --knexfile knexfile.ts migrate:make",
+    "migrate:latest": "knex --knexfile knexfile.ts migrate:latest",
+    "migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "migrate:up": "knex --knexfile knexfile.ts migrate:up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neaar3/wishlist-luizalabs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neaar3/wishlist-luizalabs/issues"
+  },
+  "homepage": "https://github.com/neaar3/wishlist-luizalabs#readme",
+  "dependencies": {
+    "@cubos/eslint-config": "^1.0.553260",
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.2",
+    "knex": "^0.95.15",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.6",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "axios": "^0.24.0",
+    "dotenv": "^10.0.0",
+    "eslint": "^8.5.0",
+    "eslint-plugin-import": "^2.25.3",
+    "jsonwebtoken": "^8.5.1",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.4"
+  }
+}
