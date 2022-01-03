@@ -16,7 +16,7 @@ const testKnexConfig = JSON.parse(
 testKnexConfig.connection.database = databaseName;
 const knex = Knex(testKnexConfig);
 
-beforeEach(async () => {
+beforeAll(async () => {
   try {
     await masterConn.raw(`CREATE DATABASE ${databaseName};`);
 
@@ -29,7 +29,7 @@ beforeEach(async () => {
   }
 });
 
-afterEach(async () => {
+afterAll(async () => {
   await knex.destroy();
   await masterConn.raw(`DROP DATABASE ${databaseName};`);
   await masterConn.destroy();
