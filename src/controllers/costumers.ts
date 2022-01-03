@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import knex from "../database";
 import { CostumerDatabase } from "../shared/costumer";
-import validateUserData, { emailValidator, validateEmail } from "../utils/costumerValidator";
+import validateUserData, { emailValidator, validateEmail } from "../helpers/costumerValidator";
 
 
 export async function createUser(req: Request, res: Response) {
@@ -11,8 +11,8 @@ export async function createUser(req: Request, res: Response) {
         await validateUserData({ name, email });
 
         const checkEmail = await knex<CostumerDatabase>("costumers")
-        .first("*")
-        .where("email", email);
+        .where("email", email)
+        .first();
 
         if (checkEmail) {
             return res.status(403).json({ error: "Email already in use." })
@@ -30,11 +30,11 @@ export async function createUser(req: Request, res: Response) {
 }
 
 export async function updateUser(req: Request, res: Response) {
-    const { userId } = req.params;
+    const { id } = req.params;
     const update = req.body;
 
     try {
-        const user = await knex<CostumerDatabase>("costumers").where("id", userId).first();
+        const user = await knex<CostumerDatabase>("costumers").where("id", id).first();
 
         if(!user) {
             return res.status(403).json({ error: "User does not exist." })
@@ -43,18 +43,14 @@ export async function updateUser(req: Request, res: Response) {
         if(update.email) {
             validateEmail(update.email)
 
-            const checkEmail = await knex<CostumerDatabase>("costumers")
-            .where("email", update.email)
-            .first();
+            const checkEmail = await knex.table("costumers").where("email", update.email).first();
 
             if (checkEmail) {
                 return res.status(403).json({ error: "Email already in use." })
             }
         }
 
-        await knex("costumers")
-        .where("id", userId)
-        .update({
+        await knex.table("costumers").where("id", id).update({
             email: update.email ?? user.email,
             name: update.name ?? user.name
         });
@@ -68,11 +64,11 @@ export async function updateUser(req: Request, res: Response) {
 }
 
 export async function deleteUser(req: Request, res: Response) {
-    const { userId } = req.params;
+    const { id } = req.params;
 
     try {
         const checkUser = await knex<CostumerDatabase>("costumers")
-        .where("id", userId)
+        .where("id", id)
         .first();
 
         if (!checkUser) {
@@ -80,7 +76,7 @@ export async function deleteUser(req: Request, res: Response) {
         }
 
         await knex("costumers")
-        .where("id", userId)
+        .where("id", id)
         .del();
 
         return res.status(200).json({message: "User deleted successfully"})
@@ -92,11 +88,11 @@ export async function deleteUser(req: Request, res: Response) {
 }
 
 export async function getUser(req: Request, res: Response) {
-    const { userId } = req.params;
+    const { id } = req.params;
 
     try {
         const userFound = await knex<CostumerDatabase>("costumers")
-        .where("id", userId)
+        .where("id", id)
         .first();
 
         if(!userFound) {
