@@ -1,7 +1,5 @@
 # LuizaLabs - Wishlist
 
-Projeto realizado
-
 ## ⚡ Sobre
 A aplicação é uma Api REST desenvolvida para o desafio da Magalu que tem como objetivo a criação de uma funcionalidade de favoritar produtos para clientes, utilizando uma API de produtos da propria magalu. Antes disso, deve ser possivel criar, atualizar, listar e remover clientes.
 Foi feito um sistema de login admin para autenticação e autorização das rotas.
