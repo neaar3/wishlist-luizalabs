@@ -1,15 +1,8 @@
 import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-    await knex.schema.createTableIfNotExists("customers", table => {
-        table.increments("id").primary()
-        table.text("name").notNullable()
-        table.text("email").unique().notNullable()
-        table.text("password").notNullable()
-    })
-
     await knex.schema.createTableIfNotExists("products", table => {
-        table.text("price").notNullable()
+        table.decimal("price").notNullable()
         table.text("image").notNullable()
         table.text("brand").notNullable()
         table.text("id").notNullable().primary()
@@ -23,7 +16,7 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.dropTable("customers")
     await knex.schema.dropTable("products")
 }
+
 

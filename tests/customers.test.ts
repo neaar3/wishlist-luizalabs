@@ -1,19 +1,18 @@
 import faker from "faker";
+import knex from "../src/database";
 
-import supertest from "supertest";
+import supertest, { Response } from "supertest";
 
 import app from "../src";
 import { passwordAdmin, usernameAdmin } from "../src/access";
+import { customerDatabase } from "../src/shared/customer";
 
 const req = supertest(app);
-let token: string | null = null;
+let loginResponse: Response | null = null;
 
-beforeEach(() => {
-    req.post('/login')
+beforeEach(async () => {
+    loginResponse = await req.post('/login')
         .send({ username: usernameAdmin, password: passwordAdmin })
-        .end(function(_err, res) {
-            token = res.body.token;
-        });
 });
 describe("customers", () => {
 
@@ -23,7 +22,7 @@ describe("customers", () => {
             name: faker.name.firstName(),
             email: faker.internet.email(),
           };
-          const res = await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
+          const res = await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
           expect(res.status).toBe(201);
           expect(res.body.message).toBe("User created successfully");
@@ -35,9 +34,9 @@ describe("customers", () => {
               email: faker.internet.email(),
             };
 
-            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
+            await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
-            const res = await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
+            const res = await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
             expect(res.status).toBe(403);
             expect(res.body.error).toBe("Email already in use.");
@@ -57,38 +56,34 @@ describe("customers", () => {
             email: faker.internet.email(),
           };
 
-          const params = {
-            id: 1
-          }
-
-          await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
+            
+            await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
+            
+            
+            const user = await knex<customerDatabase>("customers").where("email", body.email).first()
 
           const res = await req
-            .put("/customer")
-            .set('Authorization', 'Bearer ' + token)
-            .query(params)
+            .put(`/customer/${user?.id}`)
+            .set('Authorization', 'Bearer ' + loginResponse?.body.token)
             .send(body2);
 
           expect(res.status).toBe(201);
           expect(res.body.message).toBe("User updated successfully");
         });
 
-        test("should send error if email are already in use", async () => {
+        test("should send error if email is already in use", async () => {
             const body = {
                 name: faker.name.firstName(),
                 email: faker.internet.email(),
             };
 
-            const params = {
-                id: 1
-            }
+            await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
-            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
+            const user = await knex<customerDatabase>("customers").where("email", body.email).first()
 
             const res = await req
-                .put("/customer")
-                .set('Authorization', 'Bearer ' + token)
-                .query(params)
+                .put(`/customer/${user?.id}`)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send(body);
 
             expect(res.status).toBe(403);
@@ -102,13 +97,12 @@ describe("customers", () => {
             };
 
             const params = {
-                id: 1
+                id: 10000
             }
 
             const res = await req
-                .put("/customer")
-                .set('Authorization', 'Bearer ' + token)
-                .query(params)
+                .put(`/customer/${params.id}`)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send(body);
 
             expect(res.status).toBe(403);
@@ -123,16 +117,13 @@ describe("customers", () => {
                 email: faker.internet.email(),
             };
 
-            const params = {
-                id: 1
-            }
+            await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
-            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
-
+            const user = await knex<customerDatabase>("customers").where("email", body.email).first()
+            
             const res = await req
-                .delete("/customer")
-                .set('Authorization', 'Bearer ' + token)
-                .query(params)
+                .delete(`/customer/${user?.id}`)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send();
 
             expect(res.status).toBe(200);
@@ -145,13 +136,12 @@ describe("customers", () => {
             }
 
             const res = await req
-                .delete("/customer")
-                .set('Authorization', 'Bearer ' + token)
-                .query(params)
+                .delete(`/customer/${params.id}`)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send();
 
             expect(res.status).toBe(403);
-            expect(res.body.message).toBe("User does not exist");
+            expect(res.body.error).toBe("User does not exist");
         });
     })
 
@@ -162,16 +152,13 @@ describe("customers", () => {
             email: faker.internet.email(),
           };
 
-          const params = {
-            id: 1
-        }
+          await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
-          await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
-
+          const user = await knex<customerDatabase>("customers").where("email", body.email).first()
+       
           const res = await req
-                .get("/customer")
-                .set('Authorization', 'Bearer ' + token)
-                .query(params)
+                .get(`/customer/${user?.id}`)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send();
 
           expect(res.status).toBe(200);
@@ -181,13 +168,12 @@ describe("customers", () => {
 
         test("should send error if user is not found by id", async () => {
             const params = {
-              id: 1
+              id: 99999
             }
 
             const res = await req
-                .get("/customer")
-                .set('Authorization', 'Bearer ' + token)
-                .query(params)
+                .get(`/customer/${params.id}`)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send();
 
             expect(res.status).toBe(404);
@@ -196,22 +182,21 @@ describe("customers", () => {
     })
 
     describe("getAllUsers", () => {
-        test("should successfully create a new customer on database", async () => {
+        test("should successfully retrieve all customers of database", async () => {
             const body = {
                 name: faker.name.firstName(),
                 email: faker.internet.email(),
             };
 
-            await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body);
+            await req.post("/customer").set('Authorization', 'Bearer ' + loginResponse?.body.token).send(body);
 
             const res = await req
                 .get("/customer")
-                .set('Authorization', 'Bearer ' + token)
+                .set('Authorization', 'Bearer ' + loginResponse?.body.token)
                 .send();
 
             expect(res.status).toBe(200);
             expect(res.body).toBeTruthy();
-            expect(res.body.name).toBe(body.name);
         });
     })
 });

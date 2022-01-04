@@ -6,6 +6,7 @@ Projeto realizado
 A aplicação é uma Api REST desenvolvida para o desafio da Magalu que tem como objetivo a criação de uma funcionalidade de favoritar produtos para clientes, utilizando uma API de produtos da propria magalu. Antes disso, deve ser possivel criar, atualizar, listar e remover clientes.
 Foi feito um sistema de login admin para autenticação e autorização das rotas.
 
+
 ## ⚡ Techs
 Esse projeto foi desenvolvido utilizando as seguintes tecnologias e ferramentas:
 
@@ -51,12 +52,14 @@ Esse projeto foi desenvolvido utilizando as seguintes tecnologias e ferramentas:
 ```
 
 5. Crie um banco com o mesmo nome que você colocou no item DATABASE do seu env.
+```sh
+  CREATE DATABASE database (database minusculo => arquivo env)
+```
 
 6. Ajuste o banco de dados com os seguintes comandos:
 ```sh
   # Crie as tabelas
   npm run migrate:latest
-  npm run migrate:up
 ```
 
 7. Execute a aplicação:
@@ -70,7 +73,6 @@ Assim que a mensagem ``Running on http://localhost:porta_local`` aparecerer em s
 Caso queira rodar os testes, use o comando abaixo:
 
 ```sh
-  # Inicie a API
   npm run test
 ```
 ## ⚡ Rotas

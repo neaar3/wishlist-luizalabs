@@ -34,8 +34,10 @@ export async function updateUser(req: Request, res: Response) {
     const update = req.body;
 
     try {
-        const user = await knex<customerDatabase>("customers").where("id", id).first();
 
+        const user = await knex<customerDatabase>("customers").where("id", parseInt(id)).first();
+
+        
         if(!user) {
             return res.status(403).json({ error: "User does not exist." })
         }
@@ -50,7 +52,7 @@ export async function updateUser(req: Request, res: Response) {
             }
         }
 
-        await knex.table("customers").where("id", id).update({
+        await knex.table("customers").where("id", parseInt(id)).update({
             email: update.email ?? user.email,
             name: update.name ?? user.name
         });

@@ -26,13 +26,8 @@ export async function addProductsToFavorites(req: Request, res: Response) {
 
         const products = await axios.get(`http://challenge-api.luizalabs.com/api/product/${id}/`)
         .then(res => res.data)
-        .catch(err => {console.log(err)});
 
-        if (!products.price) {
-            return res.status(400).json({ message: "Product does not exist" });
-        }
-
-        const productAlreadyAdded = await knex<Partial<ProductsDatabase>>("products").where("customer_id", customerId).first();
+        const productAlreadyAdded = await knex<Partial<ProductsDatabase>>("products").where({ customer_id: customerId, id}).first();
 
         if (productAlreadyAdded) {
             return res.status(403).json({ message: "Can't duplicate product in favorite's list" });
@@ -43,7 +38,7 @@ export async function addProductsToFavorites(req: Request, res: Response) {
 
         return res.status(201).json({ message: "Product added successfully" });
     } catch (err) {
-        return res.status(500).json({ error: err })
+        return res.status(err.status ?? 400).json({ message: err.message || "Product does not exist" })
     }
 }
 
