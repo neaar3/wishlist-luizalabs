@@ -24,13 +24,11 @@
   "homepage": "https://github.com/neaar3/wishlist-luizalabs#readme",
   "dependencies": {
     "@cubos/eslint-config": "^1.0.553260",
-    "bcrypt": "^5.0.1",
     "express": "^4.17.2",
     "knex": "^0.95.15",
     "pg": "^8.7.1"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/faker": "^5.5.9",
     "@types/jest": "^27.4.0",

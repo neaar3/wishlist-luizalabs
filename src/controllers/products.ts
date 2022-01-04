@@ -37,7 +37,7 @@ export async function addProductsToFavorites(req: Request, res: Response) {
         .insert({ ...products, customer_id: customerId });
 
         return res.status(201).json({ message: "Product added successfully" });
-    } catch (err) {
+    } catch (err: any) {
         return res.status(err.status ?? 400).json({ message: err.message || "Product does not exist" })
     }
 }
