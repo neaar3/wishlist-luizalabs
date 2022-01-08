@@ -44,7 +44,6 @@ describe("products", () => {
             };
             
             const res = await req.post(`/product/${params.id}`).set('Authorization', 'Bearer ' + token).send(body);
-            console.log(res.text)
             expect(res.status).toBe(201);
             expect(res.body.message).toBe("Product added successfully");
         });
@@ -125,7 +124,6 @@ describe("products", () => {
 
             const res = await req.post(`/product/${params.id}`).set('Authorization', 'Bearer ' + token).send(body);
 
-            console.log(res.text)
             expect(res.status).toBe(403);
             expect(res.body.message).toBe("Can't duplicate product in favorite's list");
         });
@@ -158,7 +156,6 @@ describe("products", () => {
             await req.post(`/product/${params.id}`).set('Authorization', 'Bearer ' + token).send(body);
             const res = await req.delete(`/product/${params.id}`).set('Authorization', 'Bearer ' + token).send(body);
 
-            console.log(res.text)
             expect(res.status).toBe(200);
             expect(res.body.message).toBe("Product deleted");
         });
@@ -259,7 +256,6 @@ describe("products", () => {
             await req.post("/customer").set('Authorization', 'Bearer ' + token).send(body2);
 
             const res = await req.get("/product").set('Authorization', 'Bearer ' + token).send(body);
-            console.log(res.text)
             expect(res.status).toBe(200);
             expect(res.body.message).toBe("No products added to favorite list");
         });
